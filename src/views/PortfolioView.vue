@@ -140,27 +140,55 @@
                 </span>
             </div>
 
-            <a v-if="project.link" :href="project.link" target="_blank" class="project-link">
-                View Project
-            </a>
+            
             </div>
         </div>
     </section>
 
     <section id="contact" class="section contact">
       <div>
-        <h2>Contact</h2>
-        <p><i class="fas fa-envelope"></i> {{ portfolio.email }}</p>
-        <p><i class="fab fa-whatsapp"></i> {{ portfolio.whatsapp }}</p>
-        <p><i class="fas fa-phone"></i> {{ portfolio.phone }}</p>
+          <h2>Contact</h2>
+
+          <p>
+            <i class="fas fa-envelope"></i>
+            <a
+              :href="`mailto:${portfolio.email}`"
+              class="contact-link"
+            >
+              {{ portfolio.email }}
+            </a>
+          </p>
+
+          <p>
+            <i class="fab fa-whatsapp"></i>
+            <a
+              :href="`https://wa.me/${portfolio.whatsapp?.replace(/\D/g, '')}`"
+              target="_blank"
+              class="contact-link whatsapp-link"
+            >
+              {{ portfolio.whatsapp }}
+            </a>
+          </p>
+
+          <p>
+            <i class="fas fa-phone"></i>
+            <a
+              :href="`tel:${portfolio.phone}`"
+              class="contact-link"
+            >
+              {{ portfolio.phone }}
+            </a>
+          </p>
       </div>
 
       <form @submit.prevent="sendMessage">
         <input v-model="message.name" placeholder="Your Name" required />
-        <input v-model="message.email" placeholder="Your Email" required />
+        <input v-model="message.email" type="email" placeholder="Your Email" required/>
         <input v-model="message.subject" placeholder="Subject" required />
         <textarea v-model="message.message" placeholder="Message" required></textarea>
-        <button>Send Message</button>
+        <button :disabled="sendingMessage">
+          {{ sendingMessage ? 'Sending...' : 'Send Message' }}
+        </button>
       </form>
     </section>
 
@@ -183,6 +211,7 @@ const profileImageUrl = ref('')
 const cvFileUrl = ref('')
 const showAdmin = ref(false)
 const darkMode = ref(false)
+const sendingMessage = ref(false)
 
 const message = ref({
   name: '',
@@ -213,15 +242,26 @@ function toggleAdmin() {
 }
 
 async function sendMessage() {
-  await api.post('/contact-messages', message.value)
+  sendingMessage.value = true
 
-  alert('Message sent successfully')
+  try {
+    await api.post('/contact-messages', message.value)
 
-  message.value = {
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
+    alert('Message sent successfully')
+
+    message.value = {
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+    }
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      'Failed to send message'
+    )
+  } finally {
+    sendingMessage.value = false
   }
 }
 

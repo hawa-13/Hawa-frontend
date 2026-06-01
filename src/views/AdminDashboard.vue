@@ -60,104 +60,104 @@
       <div class="mini-form">
         <input v-model="newSummary.title" placeholder="Summary title" />
         <textarea v-model="newSummary.description" placeholder="Description"></textarea>
-        <button @click="addSummary">Add Summary</button>
+        <button type="button" @click="addSummary">Add Summary</button>
       </div>
 
       <div class="admin-card" v-for="item in summaries" :key="item.id">
         <input v-model="item.title" />
         <textarea v-model="item.description"></textarea>
 
-        <button @click="updateSummary(item)">Update</button>
-        <button class="danger" @click="deleteSummary(item.id)">Delete</button>
+        <button type="button" @click="updateSummary(item)">Update</button>
+        <button type="button" class="danger" @click="deleteSummary(item.id)">Delete</button>
       </div>
     </section>
 
     <section class="admin-form">
-        <h2>Skills</h2>
+      <h2>Skills</h2>
 
-        <div class="mini-form">
-            <input v-model="newSkill.name" placeholder="Skill name" />
+      <div class="mini-form">
+        <input v-model="newSkill.name" placeholder="Skill name" />
 
-            <select v-model="newSkill.icon">
+        <select v-model="newSkill.icon">
+          <option value="">Main icon</option>
+          <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
+            {{ item.name }}
+          </option>
+        </select>
+
+        <textarea v-model="newSkill.description" placeholder="Skill description"></textarea>
+
+        <h4>Add Skill Tags</h4>
+
+        <div class="tag-admin-row">
+          <input v-model="newSkillTag.name" placeholder="Tag name" />
+
+          <select v-model="newSkillTag.icon">
+            <option value="">Tag icon</option>
+            <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
+              {{ item.name }}
+            </option>
+          </select>
+
+          <button type="button" @click="addSkillTag">Add Tag</button>
+        </div>
+
+        <div class="admin-tags">
+          <span v-for="(tag, index) in newSkill.tags" :key="index" class="admin-tag-pill">
+            <i :class="tag.icon"></i>
+            {{ tag.name }}
+            <button type="button" @click="removeNewSkillTag(index)">×</button>
+          </span>
+        </div>
+
+        <button type="button" @click="addSkill">Add Skill</button>
+      </div>
+
+      <div class="admin-card-preview" v-for="skill in skills" :key="skill.id">
+        <div class="preview-content">
+          <i v-if="skill.icon" :class="skill.icon" class="preview-main-icon"></i>
+
+          <h3>{{ skill.name }}</h3>
+          <p>{{ skill.description }}</p>
+
+          <div class="admin-tags">
+            <span v-for="(tag, index) in skill.tags" :key="index" class="admin-tag-pill">
+              <i :class="tag.icon"></i>
+              {{ tag.name }}
+              <button type="button" @click="removeExistingSkillTag(skill, index)">×</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="edit-content">
+          <input v-model="skill.name" />
+
+          <select v-model="skill.icon">
             <option value="">Main icon</option>
             <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
-                {{ item.name }}
+              {{ item.name }}
             </option>
-            </select>
+          </select>
 
-            <textarea v-model="newSkill.description" placeholder="Skill description"></textarea>
+          <textarea v-model="skill.description"></textarea>
 
-            <h4>Add Skill Tags</h4>
+          <div class="tag-admin-row">
+            <input v-model="skill.tempTagName" placeholder="New tag name" />
 
-            <div class="tag-admin-row">
-            <input v-model="newSkillTag.name" placeholder="Tag name" />
-
-            <select v-model="newSkillTag.icon">
-                <option value="">Tag icon</option>
-                <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
+            <select v-model="skill.tempTagIcon">
+              <option value="">Tag icon</option>
+              <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
                 {{ item.name }}
-                </option>
+              </option>
             </select>
 
-            <button type="button" @click="addSkillTag">Add Tag</button>
-            </div>
+            <button type="button" @click="addExistingSkillTag(skill)">Add Tag</button>
+          </div>
 
-            <div class="admin-tags">
-            <span v-for="(tag, index) in newSkill.tags" :key="index" class="admin-tag-pill">
-                <i :class="tag.icon"></i>
-                {{ tag.name }}
-                <button type="button" @click="removeNewSkillTag(index)">×</button>
-            </span>
-            </div>
-
-            <button type="button" @click="addSkill">Add Skill</button>
+          <button type="button" @click="updateSkill(skill)">Update</button>
+          <button type="button" class="danger" @click="deleteSkill(skill.id)">Delete</button>
         </div>
-
-        <div class="admin-card-preview" v-for="skill in skills" :key="skill.id">
-            <div class="preview-content">
-            <i v-if="skill.icon" :class="skill.icon" class="preview-main-icon"></i>
-
-            <h3>{{ skill.name }}</h3>
-            <p>{{ skill.description }}</p>
-
-            <div class="admin-tags">
-                <span v-for="(tag, index) in skill.tags" :key="index" class="admin-tag-pill">
-                <i :class="tag.icon"></i>
-                {{ tag.name }}
-                <button type="button" @click="removeExistingSkillTag(skill, index)">×</button>
-                </span>
-            </div>
-            </div>
-
-            <div class="edit-content">
-            <input v-model="skill.name" />
-
-            <select v-model="skill.icon">
-                <option value="">Main icon</option>
-                <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
-                {{ item.name }}
-                </option>
-            </select>
-
-            <textarea v-model="skill.description"></textarea>
-
-            <div class="tag-admin-row">
-                <input v-model="skill.tempTagName" placeholder="New tag name" />
-
-                <select v-model="skill.tempTagIcon">
-                <option value="">Tag icon</option>
-                <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
-                    {{ item.name }}
-                </option>
-                </select>
-
-                <button type="button" @click="addExistingSkillTag(skill)">Add Tag</button>
-            </div>
-
-            <button type="button" @click="updateSkill(skill)">Update</button>
-            <button type="button" class="danger" @click="deleteSkill(skill.id)">Delete</button>
-            </div>
-        </div>
+      </div>
     </section>
 
     <section class="admin-form">
@@ -168,7 +168,7 @@
         <input v-model="newQualification.institution" placeholder="Institution" />
         <input v-model="newQualification.year" placeholder="Year" />
         <textarea v-model="newQualification.description" placeholder="Description"></textarea>
-        <button @click="addQualification">Add Qualification</button>
+        <button type="button" @click="addQualification">Add Qualification</button>
       </div>
 
       <div class="admin-card" v-for="q in qualifications" :key="q.id">
@@ -177,185 +177,176 @@
         <input v-model="q.year" />
         <textarea v-model="q.description"></textarea>
 
-        <button @click="updateQualification(q)">Update</button>
-        <button class="danger" @click="deleteQualification(q.id)">Delete</button>
+        <button type="button" @click="updateQualification(q)">Update</button>
+        <button type="button" class="danger" @click="deleteQualification(q.id)">Delete</button>
       </div>
     </section>
 
     <section class="admin-form">
-        <h2>Projects</h2>
+      <h2>Projects</h2>
 
-        <div class="mini-form">
-            <input v-model="newProject.title" placeholder="Project title" />
+      <div class="mini-form">
+        <input v-model="newProject.title" placeholder="Project title" />
 
-            <select v-model="newProject.icon">
+        <select v-model="newProject.icon">
+          <option value="">Main project icon</option>
+          <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
+            {{ item.name }}
+          </option>
+        </select>
+
+        <textarea v-model="newProject.description" placeholder="Project description"></textarea>
+
+        <h4>Add Project Tags</h4>
+
+        <div class="tag-admin-row">
+          <input v-model="newProjectTag.name" placeholder="Tag name" />
+
+          <select v-model="newProjectTag.icon">
+            <option value="">Tag icon</option>
+            <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
+              {{ item.name }}
+            </option>
+          </select>
+
+          <button type="button" @click="addProjectTag">Add Tag</button>
+        </div>
+
+        <div class="admin-tags">
+          <span v-for="(tag, index) in newProject.tags" :key="index" class="admin-tag-pill">
+            <i :class="tag.icon"></i>
+            {{ tag.name }}
+            <button type="button" @click="removeNewProjectTag(index)">×</button>
+          </span>
+        </div>
+
+        <button type="button" @click="addProject">Add Project</button>
+      </div>
+
+      <div class="admin-card-preview" v-for="project in projects" :key="project.id">
+        <div class="preview-content">
+          <i v-if="project.icon" :class="project.icon" class="preview-main-icon"></i>
+
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.description }}</p>
+
+          <div class="admin-tags">
+            <span v-for="(tag, index) in project.tags" :key="index" class="admin-tag-pill">
+              <i :class="tag.icon"></i>
+              {{ tag.name }}
+              <button type="button" @click="removeExistingProjectTag(project, index)">×</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="edit-content">
+          <input v-model="project.title" />
+
+          <select v-model="project.icon">
             <option value="">Main project icon</option>
             <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
-                {{ item.name }}
+              {{ item.name }}
             </option>
-            </select>
+          </select>
 
-            <textarea v-model="newProject.description" placeholder="Project description"></textarea>
+          <textarea v-model="project.description"></textarea>
 
-            <input v-model="newProject.link" placeholder="Project link" />
+          <div class="tag-admin-row">
+            <input v-model="project.tempTagName" placeholder="New tag name" />
 
-            <h4>Add Project Tags</h4>
-
-            <div class="tag-admin-row">
-            <input v-model="newProjectTag.name" placeholder="Tag name" />
-
-            <select v-model="newProjectTag.icon">
-                <option value="">Tag icon</option>
-                <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
+            <select v-model="project.tempTagIcon">
+              <option value="">Tag icon</option>
+              <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
                 {{ item.name }}
-                </option>
+              </option>
             </select>
 
-            <button type="button" @click="addProjectTag">Add Tag</button>
-            </div>
+            <button type="button" @click="addExistingProjectTag(project)">Add Tag</button>
+          </div>
 
-            <div class="admin-tags">
-            <span v-for="(tag, index) in newProject.tags" :key="index" class="admin-tag-pill">
-                <i :class="tag.icon"></i>
-                {{ tag.name }}
-                <button type="button" @click="removeNewProjectTag(index)">×</button>
-            </span>
-            </div>
-
-            <button type="button" @click="addProject">Add Project</button>
+          <button type="button" @click="updateProject(project)">Update</button>
+          <button type="button" class="danger" @click="deleteProject(project.id)">Delete</button>
         </div>
-
-        <div class="admin-card-preview" v-for="project in projects" :key="project.id">
-            <div class="preview-content">
-            <i v-if="project.icon" :class="project.icon" class="preview-main-icon"></i>
-
-            <h3>{{ project.title }}</h3>
-            <p>{{ project.description }}</p>
-
-            <div class="admin-tags">
-                <span v-for="(tag, index) in project.tags" :key="index" class="admin-tag-pill">
-                <i :class="tag.icon"></i>
-                {{ tag.name }}
-                <button type="button" @click="removeExistingProjectTag(project, index)">×</button>
-                </span>
-            </div>
-            </div>
-
-            <div class="edit-content">
-            <input v-model="project.title" />
-
-            <select v-model="project.icon">
-                <option value="">Main project icon</option>
-                <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
-                {{ item.name }}
-                </option>
-            </select>
-
-            <textarea v-model="project.description"></textarea>
-            <input v-model="project.link" />
-
-            <div class="tag-admin-row">
-                <input v-model="project.tempTagName" placeholder="New tag name" />
-
-                <select v-model="project.tempTagIcon">
-                <option value="">Tag icon</option>
-                <option v-for="item in iconOptions" :key="item.icon" :value="item.icon">
-                    {{ item.name }}
-                </option>
-                </select>
-
-                <button type="button" @click="addExistingProjectTag(project)">Add Tag</button>
-            </div>
-
-            <button type="button" @click="updateProject(project)">Update</button>
-            <button type="button" class="danger" @click="deleteProject(project.id)">Delete</button>
-            </div>
-        </div>
+      </div>
     </section>
 
     <section class="admin-form">
-        <h2>Contact Inbox</h2>
+      <h2>Contact Inbox</h2>
 
-        <div class="gmail-layout">
-            <!-- LEFT: MESSAGE LIST -->
-            <div class="gmail-list">
-            <div
-                class="gmail-item"
-                v-for="msg in messages"
-                :key="msg.id"
-                :class="{ active: selectedMessage && selectedMessage.id === msg.id }"
-                @click="selectMessage(msg)"
-            >
-                <div class="gmail-avatar">
-                {{ getInitial(msg.name) }}
-                </div>
-
-                <div class="gmail-preview">
-                <h4>{{ msg.name }}</h4>
-                <p class="gmail-subject">{{ msg.subject }}</p>
-                <p class="gmail-snippet">
-                    {{ msg.message }}
-                </p>
-                </div>
+      <div class="gmail-layout">
+        <div class="gmail-list">
+          <div
+            class="gmail-item"
+            v-for="msg in messages"
+            :key="msg.id"
+            :class="{ active: selectedMessage && selectedMessage.id === msg.id }"
+            @click="selectMessage(msg)"
+          >
+            <div class="gmail-avatar">
+              {{ getInitial(msg.name) }}
             </div>
 
-            <p v-if="messages.length === 0" class="empty-inbox">
-                No messages yet.
-            </p>
+            <div class="gmail-preview">
+              <h4>{{ msg.name }}</h4>
+              <p class="gmail-subject">{{ msg.subject }}</p>
+              <p class="gmail-snippet">{{ msg.message }}</p>
             </div>
+          </div>
 
-            <!-- RIGHT: MESSAGE DETAILS -->
-            <div class="gmail-details" v-if="selectedMessage">
-            <div class="gmail-details-header">
-                <div>
-                <h3>{{ selectedMessage.subject }}</h3>
-                <p>
-                    From:
-                    <strong>{{ selectedMessage.name }}</strong>
-                    &lt;{{ selectedMessage.email }}&gt;
-                </p>
-                </div>
-
-                <button class="danger" @click="deleteMessage(selectedMessage.id)">
-                <i class="fas fa-trash"></i>
-                Delete
-                </button>
-            </div>
-
-            <div class="gmail-body">
-                <p>{{ selectedMessage.message }}</p>
-            </div>
-
-            <div class="gmail-reply-actions">
-                <a
-                class="reply-btn"
-                :href="replyEmailLink(selectedMessage)"
-                target="_blank"
-                >
-                <i class="fas fa-reply"></i>
-                Reply Email
-                </a>
-
-                <a
-                class="whatsapp-reply-btn"
-                :href="replyWhatsappLink()"
-                target="_blank"
-                >
-                <i class="fab fa-whatsapp"></i>
-                Reply WhatsApp
-                </a>
-            </div>
-            </div>
-
-            <div class="gmail-details empty-message" v-else>
-            <i class="fas fa-envelope-open-text"></i>
-            <p>Select a message to read it.</p>
-            </div>
+          <p v-if="messages.length === 0" class="empty-inbox">
+            No messages yet.
+          </p>
         </div>
+
+        <div class="gmail-details" v-if="selectedMessage">
+          <div class="gmail-details-header">
+            <div>
+              <h3>{{ selectedMessage.subject }}</h3>
+              <p>
+                From:
+                <strong>{{ selectedMessage.name }}</strong>
+                &lt;{{ selectedMessage.email }}&gt;
+              </p>
+            </div>
+
+            <button type="button" class="danger" @click="deleteMessage(selectedMessage.id)">
+              <i class="fas fa-trash"></i>
+              Delete
+            </button>
+          </div>
+
+          <div class="gmail-body">
+            <p>{{ selectedMessage.message }}</p>
+          </div>
+
+          <div class="reply-box">
+            <h4>Write Reply</h4>
+
+            <textarea
+              v-model="replyMessage"
+              placeholder="Write your email reply here..."
+            ></textarea>
+
+            <button
+              type="button"
+              class="reply-btn"
+              :disabled="replyLoading"
+              @click="sendReply"
+            >
+              <i class="fas fa-paper-plane"></i>
+              {{ replyLoading ? 'Sending...' : 'Send Reply' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="gmail-details empty-message" v-else>
+          <i class="fas fa-envelope-open-text"></i>
+          <p>Select a message to read it.</p>
+        </div>
+      </div>
     </section>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -373,11 +364,14 @@ const messages = ref([])
 const profileImage = ref(null)
 const cvFile = ref(null)
 
+const selectedMessage = ref(null)
+const replyMessage = ref('')
+const replyLoading = ref(false)
+
 const newSummary = ref({
   title: '',
   description: '',
 })
-
 
 const newQualification = ref({
   title: '',
@@ -385,7 +379,6 @@ const newQualification = ref({
   year: '',
   description: '',
 })
-
 
 const iconOptions = [
   { name: 'R Programming', icon: 'fab fa-r-project' },
@@ -416,7 +409,6 @@ const newProject = ref({
   title: '',
   icon: '',
   description: '',
-  link: '',
   tags: [],
 })
 
@@ -430,32 +422,14 @@ const newProjectTag = ref({
   icon: '',
 })
 
-const selectedMessage = ref(null)
-
 function selectMessage(msg) {
   selectedMessage.value = msg
+  replyMessage.value = `Hello ${msg.name},\n\nThank you for contacting me.\n\n`
 }
 
 function getInitial(name) {
   if (!name) return '?'
   return name.charAt(0).toUpperCase()
-}
-
-function replyEmailLink(msg) {
-  const subject = `Re: ${msg.subject}`
-
-  const body = `
-Hello ${msg.name},
-
-Thank you for contacting me.
-
-`
-
-  return `mailto:${msg.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-}
-
-function replyWhatsappLink() {
-  return `https://wa.me/${portfolio.value.whatsapp || ''}`
 }
 
 function addSkillTag() {
@@ -494,21 +468,6 @@ function addProjectTag() {
     name: '',
     icon: '',
   }
-}
-
-newSkill.value = {
-  name: '',
-  icon: '',
-  description: '',
-  tags: [],
-}
-
-newProject.value = {
-  title: '',
-  icon: '',
-  description: '',
-  link: '',
-  tags: [],
 }
 
 function removeNewProjectTag(index) {
@@ -619,7 +578,12 @@ async function updatePortfolio() {
 
 async function addSummary() {
   await api.post('/summaries', newSummary.value)
-  newSummary.value = { title: '', description: '' }
+
+  newSummary.value = {
+    title: '',
+    description: '',
+  }
+
   loadData()
 }
 
@@ -691,7 +655,7 @@ async function addProject() {
     title: '',
     icon: '',
     description: '',
-    link: '',
+    tags: [],
   }
 
   loadData()
@@ -707,17 +671,52 @@ async function deleteProject(id) {
   loadData()
 }
 
+async function sendReply() {
+  if (!selectedMessage.value) {
+    alert('Select a message first')
+    return
+  }
+
+  if (!replyMessage.value.trim()) {
+    alert('Write your reply first')
+    return
+  }
+
+  replyLoading.value = true
+
+  try {
+    await api.post(`/contact-messages/${selectedMessage.value.id}/reply`, {
+      reply_message: replyMessage.value,
+    })
+
+    alert('Reply sent successfully')
+    replyMessage.value = ''
+  } catch (error) {
+    alert(error.response?.data?.message || 'Failed to send reply')
+  } finally {
+    replyLoading.value = false
+  }
+}
+
 async function deleteMessage(id) {
   await api.delete(`/contact-messages/${id}`)
 
   if (selectedMessage.value && selectedMessage.value.id === id) {
     selectedMessage.value = null
+    replyMessage.value = ''
   }
 
   loadData()
 }
 
-function logout() {
+async function logout() {
+  try {
+    await api.post('/admin/logout')
+  } catch (error) {
+    console.log(error)
+  }
+
+  localStorage.removeItem('adminToken')
   localStorage.removeItem('adminLoggedIn')
   router.push('/admin-login')
 }

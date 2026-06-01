@@ -9,20 +9,17 @@ const routes = [
     path: '/',
     component: PortfolioView,
   },
-
   {
     path: '/admin-login',
     component: AdminLogin,
   },
-
   {
     path: '/admin-dashboard',
     component: AdminDashboard,
-
     beforeEnter: (to, from, next) => {
-      const loggedIn = localStorage.getItem('adminLoggedIn')
+      const token = localStorage.getItem('adminToken')
 
-      if (loggedIn === 'true') {
+      if (token) {
         next()
       } else {
         next('/admin-login')

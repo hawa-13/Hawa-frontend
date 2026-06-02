@@ -28,15 +28,22 @@ body {
 /* NAVBAR */
 
 .navbar {
-  background: #4b2e2b;
-  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+
+  background: rgba(75, 46, 43, 0.95);
+  backdrop-filter: blur(12px);
+
   padding: 18px 7%;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 99;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
 .navbar h2 {
@@ -435,17 +442,7 @@ body {
   margin-bottom: 10px;
 }
 
-.navbar {
-  background: #4b2e2b;
-  color: white;
-  padding: 18px 7%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 99;
-}
+
 
 .left-side {
   display: flex;

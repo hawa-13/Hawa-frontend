@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://hawa-backend-ofet.onrender.com/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

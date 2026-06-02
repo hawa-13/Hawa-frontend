@@ -523,7 +523,11 @@ function removeExistingProjectTag(project, index) {
 async function loadData() {
   const res = await api.get('/portfolio')
 
-  portfolio.value = res.data.portfolio
+  portfolio.value = {
+    ...res.data.portfolio,
+    profile_image: res.data.profile_image_url,
+    cv_file: res.data.cv_file_url,
+  }
   summaries.value = res.data.summaries
   skills.value = res.data.skills
   qualifications.value = res.data.qualifications
@@ -534,44 +538,53 @@ async function loadData() {
 }
 
 function handleImage(e) {
-  profileImage.value = e.target.files[0]
+  const file = e.target.files[0]
+
+  if (!file) return
+
+  const reader = new FileReader()
+
+  reader.onload = () => {
+    portfolio.value.profile_image = reader.result
+  }
+
+  reader.readAsDataURL(file)
 }
 
 function handleCv(e) {
-  cvFile.value = e.target.files[0]
+  const file = e.target.files[0]
+
+  if (!file) return
+
+  const reader = new FileReader()
+
+  reader.onload = () => {
+    portfolio.value.cv_file = reader.result
+    portfolio.value.cv_file_name = file.name
+  }
+
+  reader.readAsDataURL(file)
 }
 
 async function updatePortfolio() {
-  const formData = new FormData()
+  await api.post('/portfolio/update', {
+    name: portfolio.value.name || '',
+    title: portfolio.value.title || '',
+    email: portfolio.value.email || '',
+    phone: portfolio.value.phone || '',
+    whatsapp: portfolio.value.whatsapp || '',
+    nationality: portfolio.value.nationality || '',
+    location: portfolio.value.location || '',
+    marital_status: portfolio.value.marital_status || '',
+    short_summary: portfolio.value.short_summary || '',
+    about: portfolio.value.about || '',
 
-  formData.append('name', portfolio.value.name || '')
-  formData.append('title', portfolio.value.title || '')
-  formData.append('email', portfolio.value.email || '')
-  formData.append('phone', portfolio.value.phone || '')
-  formData.append('whatsapp', portfolio.value.whatsapp || '')
-  formData.append('nationality', portfolio.value.nationality || '')
-  formData.append('location', portfolio.value.location || '')
-  formData.append('marital_status', portfolio.value.marital_status || '')
-  formData.append('short_summary', portfolio.value.short_summary || '')
-  formData.append('about', portfolio.value.about || '')
-
-  if (profileImage.value) {
-    formData.append('profile_image', profileImage.value)
-  }
-
-  if (cvFile.value) {
-    formData.append('cv_file', cvFile.value)
-  }
-
-  await api.post('/portfolio/update', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
+    profile_image: portfolio.value.profile_image || '',
+    cv_file: portfolio.value.cv_file || '',
+    cv_file_name: portfolio.value.cv_file_name || '',
   })
 
   alert('Profile updated successfully')
-  profileImage.value = null
-  cvFile.value = null
 
   loadData()
 }
